@@ -6,11 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = { version = "4.4.7", features = ["derive"] }
 figment = { version = "0.10.12", features = ["toml"] }
 pulldown-cmark = "0.9.3"
 rocket = "=0.5.0-rc.3"
 serde = { version = "1.0.190", features = ["derive"] }
-sqlx = "0.7.2"
+sqlx = { version = "0.7.2", features = ["sqlite"] }
 tera = "1.19.1"
 toml = "0.8.6"
 

@@ -1,8 +1,12 @@
 #[macro_use]
 extern crate rocket;
 
+mod cli;
 mod config;
+mod database;
 
+use config::Config;
+use database::Database;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use tera::{Context, Tera};
@@ -11,13 +15,13 @@ struct App {
     pages: Vec<RawHtml<String>>,
     tera: Tera,
     config: Config,
-    db_connection: 
+    database: Database,
 }
 
 impl App {}
 
 #[get("/")]
-fn index() -> RawHtml<String> {
+async fn index() -> RawHtml<String> {
     let tera = match Tera::new("templates/**/*.html") {
         Ok(t) => t,
         Err(e) => {
@@ -30,10 +34,12 @@ fn index() -> RawHtml<String> {
 }
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
     let app = App {
         pages: todo!(),
         tera: todo!(),
+        config: todo!(),
+        database: todo!(),
     };
 
     rocket::build().mount("/", routes![index]).manage(app);
