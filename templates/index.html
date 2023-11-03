@@ -1,0 +1,66 @@
+{% import "macros.html" as macros %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {{ macros::head() }} 
+  <link rel="stylesheet" href="/static/css/index.css">
+</head>
+
+<body>
+  <div class="center">
+    <div class="header">
+      <h1 class="title"><a href="/">site</a></h1>
+      <div class="subheader">
+        <a href="/blog">[blog] </a>
+        <a href="/notes">[notes] </a>
+        <a href="/projects">[projects] </a>
+        <a href="/friends">[friends] </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="content-heading">
+      intro
+    </div>
+    <hr>
+    <div class="content-body">
+      <p class="about-me">hello! i'm a dev from NY, with interests in philosophy, programming, and engineering.
+        here you can find all of the projects that i've worked on throughout the years, as well as some blog posts where
+        i share my ideas on things.</p>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="content-heading">
+      about me
+    </div>
+    <hr>
+    <div class="content-body">
+      <p class="list">-&gt; typescript, rust, c, python &lt;-</p>
+      <p class="list">-&gt; linux (i3, alacritty, archbtw) &lt;-</p>
+      <p class="list">-&gt; 3d printing &lt;-</p>
+      <p class="list">-&gt; chronic and avid shitposter &lt;-</p>
+      <p class="list">-&gt; they/them &lt;-</p>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="content-heading">
+      where to find me
+    </div>
+    <hr>
+    <div class="content-body">
+      <p class="list">-&gt; discord: coal#6860 &lt;-</p>
+      <p class="list">-&gt; email: root@here.sh &lt;-</p>
+      <p class="list">-&gt; github: <a href="https://github.com/coal-rock">coal-rock</a> &lt;-
+      </p>
+      <p class=" list">-&gt; spotify: <a
+          href="https://open.spotify.com/user/uopggvihny160zs8gwgdmew69?si=a6a562d73ca34660">liamisaloser</a> &lt;-
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>
