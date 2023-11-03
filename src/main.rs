@@ -8,6 +8,7 @@ mod database;
 use config::Config;
 use database::Database;
 use rocket::response::content::RawHtml;
+use rocket::response::NamedFile;
 use rocket::State;
 use tera::{Context, Tera};
 
@@ -33,14 +34,35 @@ async fn index() -> RawHtml<String> {
     RawHtml(tera.render("index.html", &Context::new()).unwrap())
 }
 
+#[get("/static/<category>/<filename>")]
+async fn cms(category: &str, filename: &str) -> NamedFile {
+    match category {
+        "css"
+    }
+
+
+
+    // let tera = match Tera::new("templates/**/*.html") {
+    //     Ok(t) => t,
+    //     Err(e) => {
+    //         println!("Parsing error(s): {}", e);
+    //         ::std::process::exit(1);
+    //     }
+    // };
+    //
+    // RawHtml(tera.render("index.html", &Context::new()).unwrap())
+}
+
 #[launch]
 async fn rocket() -> _ {
+    let config = Config::default();
+
     let app = App {
-        pages: todo!(),
-        tera: todo!(),
-        config: todo!(),
-        database: todo!(),
+        pages: vec![],
+        tera: Tera::new(&config.template_dir).unwrap(),
+        database: Database::new(&config).await,
+        config,
     };
 
-    rocket::build().mount("/", routes![index]).manage(app);
+    rocket::build().mount("/", routes![index, cms]).manage(app)
 }

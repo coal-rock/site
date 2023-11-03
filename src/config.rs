@@ -7,6 +7,7 @@ use std::net::Ipv4Addr;
 pub struct Config {
     pub template_dir: String,
     pub static_dir: String,
+    pub static_routes: Vec<String>,
     pub db_path: String,
     pub hot_reload: bool,
     pub interface: Ipv4Addr,
@@ -19,8 +20,9 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            template_dir: "templates".to_string(),
+            template_dir: "templates/**/*.html".to_string(),
             static_dir: "static".to_string(),
+            static_routes: vec!["css".to_string(), "fonts".to_string(), "images".to_string()],
             hot_reload: false,
             db_path: "site.db".to_string(),
             interface: Ipv4Addr::from([127, 0, 0, 1]),
