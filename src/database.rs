@@ -1,4 +1,6 @@
 use crate::config::Config;
+use crate::page::Page;
+
 use sqlx::migrate;
 use sqlx::sqlite::SqlitePoolOptions;
 
@@ -15,8 +17,12 @@ impl Database {
 
         let mut conn = pool.acquire().await.unwrap();
 
-        sqlx::migrate!("db/migrations").run(&pool).await.unwrap();
+        sqlx::migrate!("./migrations/").run(&pool).await.unwrap();
 
         Database { pool }
+    }
+
+    pub async fn get_pages(&self) {
+        // sqlx::query_as!(Page, "select * from pages");
     }
 }

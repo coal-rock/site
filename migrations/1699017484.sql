@@ -6,10 +6,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS pages (
 	title text not null unique,
-	description text not null,
+	description text,
 	content text not null,
 	date text not null,
-	serve_path text not null unique
+	serve_path text not null unique,
+	template text not null
 )
 
 

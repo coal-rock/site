@@ -4,16 +4,22 @@ extern crate rocket;
 mod cli;
 mod config;
 mod database;
+mod page;
+mod template;
+
+use std::{collections::HashMap, path::PathBuf};
 
 use config::Config;
 use database::Database;
+use page::Page;
+use rocket::fs::NamedFile;
 use rocket::response::content::RawHtml;
-use rocket::response::NamedFile;
 use rocket::State;
 use tera::{Context, Tera};
 
 struct App {
-    pages: Vec<RawHtml<String>>,
+    compiled_pages: HashMap<String, RawHtml<String>>,
+    pages: Vec<Page>,
     tera: Tera,
     config: Config,
     database: Database,
@@ -22,8 +28,37 @@ struct App {
 impl App {}
 
 #[get("/")]
-async fn index() -> RawHtml<String> {
-    let tera = match Tera::new("templates/**/*.html") {
+async fn index(state: &State<App>) -> RawHtml<String> {
+    RawHtml(state.tera.render("index.html", &Context::new()).unwrap())
+}
+
+#[get("/static/<category>/<filename>")]
+async fn cms(state: &State<App>, category: &str, filename: &str) -> Option<NamedFile> {
+    if !state.config.static_routes.contains(&category.to_string()) {
+        return None;
+    }
+
+    match NamedFile::open(format!(
+        "{}/{}/{}",
+        state.config.static_dir, category, filename
+    ))
+    .await
+    {
+        Ok(file) => Some(file),
+        Err(_) => None,
+    }
+}
+
+#[get("/<path..>")]
+async fn pages(state: &State<App>, path: PathBuf) -> Option<NamedFile> {
+    None
+}
+
+#[launch]
+async fn rocket() -> _ {
+    let config = Config::default();
+
+    let tera = match Tera::new(&format!("{}**/*.html", &config.template_dir)) {
         Ok(t) => t,
         Err(e) => {
             println!("Parsing error(s): {}", e);
@@ -31,38 +66,17 @@ async fn index() -> RawHtml<String> {
         }
     };
 
-    RawHtml(tera.render("index.html", &Context::new()).unwrap())
-}
-
-#[get("/static/<category>/<filename>")]
-async fn cms(category: &str, filename: &str) -> NamedFile {
-    match category {
-        "css"
-    }
-
-
-
-    // let tera = match Tera::new("templates/**/*.html") {
-    //     Ok(t) => t,
-    //     Err(e) => {
-    //         println!("Parsing error(s): {}", e);
-    //         ::std::process::exit(1);
-    //     }
-    // };
-    //
-    // RawHtml(tera.render("index.html", &Context::new()).unwrap())
-}
-
-#[launch]
-async fn rocket() -> _ {
-    let config = Config::default();
+    let database = Database::new(&config).await;
 
     let app = App {
-        pages: vec![],
-        tera: Tera::new(&config.template_dir).unwrap(),
-        database: Database::new(&config).await,
+        compiled_pages: HashMap::new(),
+        tera,
+        database,
         config,
+        pages: vec![],
     };
 
-    rocket::build().mount("/", routes![index, cms]).manage(app)
+    rocket::build()
+        .mount("/", routes![index, cms, pages])
+        .manage(app)
 }

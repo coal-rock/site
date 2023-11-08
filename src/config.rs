@@ -20,11 +20,11 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            template_dir: "templates/**/*.html".to_string(),
-            static_dir: "static".to_string(),
+            template_dir: "templates/".to_string(),
+            static_dir: "static/".to_string(),
             static_routes: vec!["css".to_string(), "fonts".to_string(), "images".to_string()],
             hot_reload: false,
-            db_path: "site.db".to_string(),
+            db_path: "testing.db".to_string(),
             interface: Ipv4Addr::from([127, 0, 0, 1]),
             port: 3000,
             user: "admin".to_string(),
